@@ -39,7 +39,7 @@ def to_u16(value: int) -> int:
     return value
 
 
-def write(client, address: int, value: int, label: str = "") -> bool:
+def write(client, address: int, value: int, label: str = ""):
     """Write a single register; print result; return True on success."""
     result = client.write_register(address=address, value=value, unit=SLAVE_ID)
     if result.isError():
@@ -49,7 +49,7 @@ def write(client, address: int, value: int, label: str = "") -> bool:
     return True
 
 
-def read(client, address: int, label: str = "") -> int | None:
+def read(client, address: int, label: str = ""):
     """Read a single register and return its value, or None on error."""
     result = client.read_holding_registers(address=address, count=1, unit=SLAVE_ID)
     if result.isError():
