@@ -11,10 +11,10 @@ Modbus address formula: group * 256 + parameter_number
 """
 
 import time
-from pymodbus.client import ModbusSerialClient
+from pymodbus.client.sync import ModbusSerialClient
 
 # ── Config ────────────────────────────────────────────────────────────────────
-PORT      = '/dev/rs485'   # Linux: /dev/ttyUSB0 etc. | Windows: 'COM3' etc.
+PORT      = '/dev/rs485'   # This was manually configured as a symlink to the FTDI product ID
 SLAVE_ID  = 1              # Must match P10.00 on the drive (default = 1)
 BAUD      = 115200         # Must match P10.02 on the drive (default 6 = 115200)
 # P10.03 default = 0 → no parity, 2 stop bits — reflected below
@@ -41,7 +41,7 @@ def to_u16(value: int) -> int:
 
 def write(client, address: int, value: int, label: str = "") -> bool:
     """Write a single register; print result; return True on success."""
-    result = client.write_register(address=address, value=value, slave=SLAVE_ID)
+    result = client.write_register(address=address, value=value, unit=SLAVE_ID)
     if result.isError():
         print(f"  ERROR writing {label or address}: {result}")
         return False
@@ -51,7 +51,7 @@ def write(client, address: int, value: int, label: str = "") -> bool:
 
 def read(client, address: int, label: str = "") -> int | None:
     """Read a single register and return its value, or None on error."""
-    result = client.read_holding_registers(address=address, count=1, slave=SLAVE_ID)
+    result = client.read_holding_registers(address=address, count=1, unit=SLAVE_ID)
     if result.isError():
         print(f"  ERROR reading {label or address}: {result}")
         return None
