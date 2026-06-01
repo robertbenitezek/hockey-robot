@@ -17,18 +17,22 @@ client = ModbusSerialClient(
 def to_u16(value):
     return value & 0xFFFF if value < 0 else value
 
-try:
-    print("Connecting...")
-    client.connect()
-    print("Connected.\n")
-
-    # Speed source = digit value (P05.03)
+def servo_config():
+    # Speed source = digit value (P05.00)
     client.write_register(address=1280, value=0, unit=SLAVE_ID)
 
     # Force DI enable + assert S-ON
     client.write_register(address=2826, value=1, unit=SLAVE_ID)
     client.write_register(address=2827, value=1, unit=SLAVE_ID)
     time.sleep(0.5)
+
+try:
+    print("Connecting...")
+    client.connect()
+    print("Connected.\n")
+
+    #configure the servo
+    servo_config()
 
     # +100 RPM for 5s
     print("Running +100 RPM...")
