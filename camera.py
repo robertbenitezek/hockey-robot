@@ -24,6 +24,7 @@ def capture_loop():
     #of capture loop function so that it is seen everywhere
     global latest_frame 
 
+    #continuously read from the frame, reduce image quality, and turn into raw bytes using mutex
     while True:
         success, img = cam.read() #grab frame
 
@@ -48,7 +49,7 @@ t.start()
 def shutdown(sig, frame):
     print("\nShutting down...")
     cam.release()
-    os.exit(0)
+    os._exit(0)
 
 #In event of escape or program shutdown, release camera resource
 signal.signal(signal.SIGINT, shutdown)
@@ -93,4 +94,4 @@ def mjpeg():
 
 # 0.0.0.0 means accept connections from any network interface (not just localhost)
 # threaded=True lets Flask handle multiple connections simultaneously
-app.run(host='0.0.0.0', threaded=True)
+# ---> This is obsolete as now using Gunicorn to handle multiple requests: app.run(host='0.0.0.0', threaded=True)
