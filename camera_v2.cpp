@@ -2,6 +2,6 @@
 
 int main()
 {
-    std::cout << "Hello from C++" << std::endl;
+    std::cout << "Hello world! This is the first cpp push lol" << std::endl;
     return 0;
 }
