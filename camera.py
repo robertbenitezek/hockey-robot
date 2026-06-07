@@ -1,5 +1,5 @@
 import signal
-import sys
+import os
 import cv2
 import threading
 from flask import Flask, Response
@@ -10,7 +10,7 @@ app = Flask(__name__)
 cam = cv2.VideoCapture(0)
 cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640) #width
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480) #height
-cam.set(cv2.CAP_PROP_FPS, 30) #camera framerate
+cam.set(cv2.CAP_PROP_FPS, 60) #camera framerate
 cam.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # minimize buffer lag
 
 # shared frame state
@@ -48,7 +48,7 @@ t.start()
 def shutdown(sig, frame):
     print("\nShutting down...")
     cam.release()
-    sys.exit(0)
+    os.exit(0)
 
 #In event of escape or program shutdown, release camera resource
 signal.signal(signal.SIGINT, shutdown)
