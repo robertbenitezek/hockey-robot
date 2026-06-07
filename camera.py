@@ -10,13 +10,14 @@ app = Flask(__name__)
 cam = cv2.VideoCapture(0)
 cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+signal.signal(signal.SIGINT, shutdown)  # handles Ctrl+C
 
 def shutdown(sig, frame):
     print("\nShutting down webcam and server...")
     cam.release()
     sys.exit(0)
 
-signal.signal(signal.SIGINT, shutdown)  # handles Ctrl+C
+
 
 @app.route("/")
 def hello_world():
@@ -30,11 +31,17 @@ def hello_world():
 
 def gather_img():
     while True:
-        time.sleep(0.01)
-        success, img = cam.read()
+        time.sleep(0.01) 
+        success, img = cam.read() #read the camera data 
+
         if not success:
             break
-        _, frame = cv2.imencode('.jpg', img)
+
+        _, frame = cv2.imencode('.jpg', img) 
+
+        
+
+        #multipart http chunk
         yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
 
 @app.route("/mjpeg")
