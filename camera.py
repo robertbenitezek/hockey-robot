@@ -6,8 +6,8 @@ from flask import Flask, Response
 
 app = Flask(__name__)
 
-# setup camera
-cam = cv2.VideoCapture(0)
+# setup camera; forcing it to use V4L2 driver instead of GStreamer
+cam = cv2.VideoCapture(0, cv2.CAP_V4L2)
 cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640) #width
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480) #height
 cam.set(cv2.CAP_PROP_FPS, 60) #camera framerate
