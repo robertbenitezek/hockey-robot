@@ -94,23 +94,17 @@ def index():
     </body>
     """
 
-#gets the latest frame that has been encoded
 def gather_img():
     while True:
-        
-        #lock the frame resource to ensure no race condition
         with frame_lock:
-            
-            #read from the latest frame
             frame = latest_frame
 
-        #if not successful then it is what it is
         if frame is None:
+            time.sleep(0.005)
             continue
         
-        # build the multipart HTTP chunk (boundary + header + jpeg bytes) and send it,
-        # then pause until Flask asks for the next frame
         yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        time.sleep(0.033)  # ~30fps, gives capture thread room to breathe
 
 #mjpeg section of webserver
 @app.route("/mjpeg")
