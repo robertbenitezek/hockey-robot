@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 #capture the video using Gstreamer and nvidia specific GPU decoder and colour conversion
 cam = cv2.VideoCapture(
-    'v4l2src device=/dev/camera ! image/jpeg,width=640,height=480,framerate=30/1 ! nvv4l2decoder ! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! video/x-raw,format=BGR ! appsink',
+    'v4l2src device=/dev/camera ! image/jpeg,width=640,height=480,framerate=30/1 ! nvv4l2decoder ! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! video/x-raw,format=BGR ! appsink sync=false',
     cv2.CAP_GSTREAMER
 )
 
