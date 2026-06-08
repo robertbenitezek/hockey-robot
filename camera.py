@@ -16,6 +16,33 @@ cam = cv2.VideoCapture(
 latest_frame = None
 frame_lock = threading.Lock() #instantiate the frame lock
 
+#detects black blob
+def detectAndMarkBlob(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, mask = cv2.threshold(gray, 60, 255, cv2.THRESH_BINARY_INV)
+
+    mask = cv2.erode(mask, None, iterations=2)
+    mask = cv2.dilate(mask, None, iterations=2)
+
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    if not contours:
+        return img
+
+    largest = max(contours, key=cv2.contourArea)
+    
+    M = cv2.moments(largest)
+    if M["m00"] == 0:
+        return img
+
+    cx = int(M["m10"] / M["m00"])
+    cy = int(M["m01"] / M["m00"])
+
+    cv2.drawContours(img, [largest], -1, (0, 255, 0), 2)
+    cv2.circle(img, (cx, cy), 5, (0, 0, 255), -1)
+
+    return img
+
 #capture loop runs in background thread, continuously reading latest frame
 def capture_loop():
 
@@ -30,6 +57,9 @@ def capture_loop():
         #if frame grab was unsuccessful continue
         if not success: 
             continue
+
+        #detect and mark blob
+        img = detectAndMarkBlob(img)
         
         #compress captured frame into a jpeg, keeping 60% quality
         _, encoded = cv2.imencode('.jpg', img, [cv2.IMWRITE_JPEG_QUALITY, 60]) 
