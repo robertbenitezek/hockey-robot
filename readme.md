@@ -1,1 +1,0 @@
-This project is to create an autonomous hockey defenseman using a servo motor to swing a hockey stick and a camera to track the puck and send the commands to the servo for where the puck will need to go
