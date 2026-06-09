@@ -57,6 +57,7 @@ def capture_loop():
 
         #if frame grab was unsuccessful continue
         if not success: 
+            time.sleep(0.01) 
             continue
 
         #detect and mark blob
@@ -118,7 +119,7 @@ def mjpeg():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, threaded=True)
-    
+
 # 0.0.0.0 means accept connections from any network interface (not just localhost)
 # threaded=True lets Flask handle multiple connections simultaneously
 # ---> This is obsolete as now using Gunicorn to handle multiple requests: app.run(host='0.0.0.0', threaded=True)
