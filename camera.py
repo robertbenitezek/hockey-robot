@@ -116,6 +116,9 @@ def mjpeg():
     # boundary=frame matches the --frame delimiter in our yield
     return Response(gather_img(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, threaded=True)
+    
 # 0.0.0.0 means accept connections from any network interface (not just localhost)
 # threaded=True lets Flask handle multiple connections simultaneously
 # ---> This is obsolete as now using Gunicorn to handle multiple requests: app.run(host='0.0.0.0', threaded=True)
